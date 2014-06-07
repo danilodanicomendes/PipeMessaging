@@ -3,8 +3,6 @@
 #include "WndLogin.h"
 #include "WndInicial.h"
 #include "resource.h"
-// DLL feita pela professora para esta primeira fase
-//#include "DLLTP.h"
 
 WndLogin::WndLogin(HINSTANCE hInst) :
 	Window<WndLogin>(TEXT("PipeMessaging - Login"),  WS_OVERLAPPED | WS_SYSMENU, 200, 200,
@@ -47,6 +45,8 @@ void WndLogin::onCreate() {
 	SendMessage(hPass, WM_SETFONT, WPARAM ((HFONT)GetStockObject(DEFAULT_GUI_FONT)), TRUE);
 }
 
+
+
 void WndLogin::onClick() {
 	TCHAR bufferUser[100];
 	TCHAR bufferPass[100];
@@ -59,6 +59,14 @@ void WndLogin::onClick() {
 	if (_tcscmp(bufferUser, TEXT("")) != 0 && Autenticar(bufferUser, bufferPass)) {
 		_stprintf_s(msg, sizeof(msg)/sizeof(TCHAR), TEXT("Bem vindo, %s."), bufferUser);
 		MessageBox(hWnd, msg, TEXT("Login - Success"), MB_ICONINFORMATION);
+
+		// PARA TESTES -------------------------------FUNCIONA ------
+		WaitNamedPipe(PIPE_NAME, NMPWAIT_WAIT_FOREVER);
+		HANDLE hPipe = CreateFile(PIPE_NAME, GENERIC_WRITE | GENERIC_READ, 0, NULL, 
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		//WriteFile(hPipe, str, _tcslen(str)*sizeof(TCHAR), &n, NULL);
+		Sleep(100); // Só para dar tempo do servidor reconhecer que ligou-se, pois ele salta fora da função antes e fecha o handle
+		// ----------------------------------------------------------
 
 		// Instância janela principal
 		if (_tcscmp(bufferUser, TEXT("admin")) == 0) {

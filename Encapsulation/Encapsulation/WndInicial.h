@@ -13,6 +13,8 @@ class WndInicial : public Window<WndInicial> {
 
 	HANDLE mutex;
 
+	WndPrivado * janelaPrivada;
+
 	static bool doQuit;
 
 	UTILIZADOR users[NUMUTILIZADORES];

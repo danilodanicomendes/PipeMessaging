@@ -33,9 +33,6 @@ void WndInicial::onCreate() {
 	hChatHistoricListBox = CreateWindow(TEXT("LISTBOX"), 0, WS_CHILD | WS_VISIBLE | LBS_NOTIFY | WS_BORDER | WS_VSCROLL, 
 		180, 20, 400, 254, hWnd, (HMENU) IDC_CHAT_HISTORY, NULL, 0);
 
-	/*CreateWindow(TEXT("EDIT"), 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_READONLY, 
-	425, 274, 150, 100, hWnd, 0, NULL, 0);*/
-
 	hSendButton = CreateWindow(TEXT("BUTTON"), TEXT("Enviar"), WS_BORDER | WS_CHILD | WS_VISIBLE | BS_FLAT, 
 		453, 306, 100, 40, hWnd, (HMENU) IDC_ENVIAR_BUTTON, NULL, 0);
 
@@ -60,7 +57,7 @@ void WndInicial::onCreate() {
 	Sleep(200); // Para criar a segunda thread e evitar sobre
 	Tindex = 1;
 	Tid = 1;
-	// (NULL, 0, (LPTHREAD_START_ROUTINE) ThreadDistributor, this, 0, &Tid)) == NULL)
+
 	ThreadHwnd = (HANDLE) _beginthreadex(NULL, 0, (unsigned (__stdcall*)(void*)) ThreadDistributor,
 		this, 0, NULL);
 	if (errno == EAGAIN || errno == EINVAL){
@@ -209,7 +206,6 @@ DWORD WndInicial::ThreadMsgsChatFunction() {
 
 		if(stopMsgsChat)
 			break;
-
 	}
 	return 0;
 }
@@ -232,11 +228,10 @@ void WndInicial::onStartChatPrivado(LPARAM lParam) {
 	// Se foi, inicia chat privado, senão não faz nada.
 
 	if ((HWND) lParam == hUsersListBox) {
-		// Só permite a conversa com o admin, isto estará bem?
 		if (IniciarConversa(users[SendDlgItemMessage(hWnd, IDC_LISTA_UTILIZADORES, LB_GETCURSEL, 0, 0)].login)) {
 			//MessageBox(hWnd, TEXT("Aceite"), TEXT("SADDS"), MB_OK);
-			WndPrivado w(((LPCTSTR) IDR_MENU1), gethInstance());
-			w.showWindow(SW_SHOWNORMAL);
+			janelaPrivada = new WndPrivado(((LPCTSTR) IDR_MENU1), gethInstance());
+			janelaPrivada->showWindow(SW_SHOWNORMAL);
 		} //else
 		//MessageBox(hWnd, TEXT("Recusado, utilizador já se encontra em conversa privada."), TEXT("PipeMessagin - Erro"), MB_OK);
 	}
