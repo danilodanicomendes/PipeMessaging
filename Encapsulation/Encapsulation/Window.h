@@ -1,7 +1,8 @@
 #pragma once
 #include <windows.h>
 #include "resource.h"
-#include "DLLTP.h"
+//#include "DLLTP.h"
+#include "config.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ protected:
 
 	static BOOL started;
 
-	
+	static HANDLE hPipePublic;
 private:
 	HINSTANCE hInstance;
 	// Conta numero total de janelas criadas por causa do ponteiro a usar no WndProc
@@ -104,3 +105,4 @@ public:
 
 template <typename T> BOOL Window<T>::started = FALSE;
 template <typename T> int Window<T>::nWindows = 0;
+template <typename T>  HANDLE Window<T>::hPipePublic = NULL;

@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include "DLLTP.h"
+#include "config.h"
 
 class Server;
 

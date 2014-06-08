@@ -84,7 +84,7 @@
     <ClCompile Include="WndPrivado.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DLLTP.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="Window.h" />
@@ -101,7 +101,7 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="DLLTP.lib" />
+    <Library Include="config.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

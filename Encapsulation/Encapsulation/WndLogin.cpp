@@ -4,6 +4,7 @@
 #include "WndInicial.h"
 #include "resource.h"
 
+
 WndLogin::WndLogin(HINSTANCE hInst) :
 	Window<WndLogin>(TEXT("PipeMessaging - Login"),  WS_OVERLAPPED | WS_SYSMENU, 200, 200,
 	615, 435, NULL, NULL, TEXT("JanelaLogin"), IDB_BITMAP2, NULL, hInst) {
@@ -20,6 +21,20 @@ bool WndLogin::doQuit = true;
 unsigned int WndLogin::backgroundImg = IDB_BITMAP1;
 
 void WndLogin::onCreate() {
+	// If registry doesnt have address yet
+	HKEY hKey;
+	DWORD result;
+	if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, TEXT("Software\\PipeMessaging"),0, NULL, REG_OPTION_NON_VOLATILE,
+				KEY_ALL_ACCESS, NULL, &hKey, &result) != ERROR_SUCCESS) {
+				MessageBox(hWnd, TEXT("Error inserting/accessing address to registry. Try again later"), TEXT("PipeMessagin - Error"), MB_OK);
+				exit(0);
+	} else if (result == REG_CREATED_NEW_KEY) {
+		// Start dialog
+		DialogBox(gethInstance(), (LPCWSTR) IDD_DIALOG3, hWnd, (DLGPROC) DialogSetPipeToRegistry);
+	}
+	RegCloseKey(hKey);
+	setPipeName();
+
 	// User name static label and text box
 	hStaticUser = CreateWindow(TEXT("STATIC"), TEXT("Username:"), WS_CHILD | WS_VISIBLE, 
 		110, 250, 150, 20, hWnd, (HMENU) IDC_STATIC_USER, NULL, 0);
@@ -45,28 +60,31 @@ void WndLogin::onCreate() {
 	SendMessage(hPass, WM_SETFONT, WPARAM ((HFONT)GetStockObject(DEFAULT_GUI_FONT)), TRUE);
 }
 
-
-
 void WndLogin::onClick() {
-	TCHAR bufferUser[100];
-	TCHAR bufferPass[100];
+	TCHAR bufferUser[TAMLOGIN];
+	TCHAR bufferPass[TAMPASS];
 	TCHAR msg[300];
 
 	GetWindowText(hUser, bufferUser, sizeof(bufferUser)/sizeof(TCHAR));
 	GetWindowText(hPass, bufferPass, sizeof(bufferPass)/sizeof(TCHAR));
 
-	// Não esquecer que isto está com bug, em que aceita login vazio. Depois corrigir.
-	if (_tcscmp(bufferUser, TEXT("")) != 0 && Autenticar(bufferUser, bufferPass)) {
+	// Create pipe
+	if (!WaitNamedPipe(PIPE_NAME, NMPWAIT_WAIT_FOREVER)) {
+		//_tprintf(TEXT("[ERROR] Error connecting to server. Try again later...\n"), PIPE_NAME);
+		exit(0);
+	}
+	if ((hPipePublic = CreateFile(PIPE_NAME, GENERIC_READ | GENERIC_WRITE, 0, NULL, 
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == NULL) {
+			//_tprintf(TEXT("[ERROR] Error connecting to server. Try again later...\n"), PIPE_NAME);
+			exit(0);
+	}
+
+	// Validate user with dll function (config.dll::Autenticar(...))
+	if (_tcscmp(bufferUser, TEXT("")) != 0 && Autenticar(hPipePublic, bufferUser, bufferPass)) {
 		_stprintf_s(msg, sizeof(msg)/sizeof(TCHAR), TEXT("Bem vindo, %s."), bufferUser);
 		MessageBox(hWnd, msg, TEXT("Login - Success"), MB_ICONINFORMATION);
-
-		// PARA TESTES -------------------------------FUNCIONA ------
-		WaitNamedPipe(PIPE_NAME, NMPWAIT_WAIT_FOREVER);
-		HANDLE hPipe = CreateFile(PIPE_NAME, GENERIC_WRITE | GENERIC_READ, 0, NULL, 
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		//WriteFile(hPipe, str, _tcslen(str)*sizeof(TCHAR), &n, NULL);
-		Sleep(100); // Só para dar tempo do servidor reconhecer que ligou-se, pois ele salta fora da função antes e fecha o handle
-		// ----------------------------------------------------------
+		
+		Sleep(100); // Just so client thread on server has time to load
 
 		// Instância janela principal
 		if (_tcscmp(bufferUser, TEXT("admin")) == 0) {
@@ -86,6 +104,8 @@ void WndLogin::onClick() {
 	} else {
 		_stprintf_s(msg, sizeof(msg)/sizeof(TCHAR), TEXT("User \"%s\" e/ou password são inválidos."), bufferUser);
 		MessageBox(NULL, msg, TEXT("Login - Failed"), MB_ICONERROR);
+		// Close Pipe Handle
+		CloseHandle(hPipePublic);
 	}
 }
 
@@ -119,6 +139,54 @@ LRESULT WndLogin::setEditsBk(WPARAM wParam, LPARAM lParam) {
 	return NULL;
 }
 
+int WndLogin::onOK_DialogSetPipeToRegistry(HWND hWnd) {
+	// If time, move to config.dll
+	TCHAR pipeAddress[TAMTEXTO];
+	HKEY hKey;
+	DWORD result, version;
+	// Read value from editBox
+	GetWindowText(GetDlgItem(hWnd, IDC_EDIT1), pipeAddress, _tcslen(pipeAddress)*sizeof(TCHAR));
+	// Insert address into registry
+	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE,TEXT("Software\\PipeMessaging"),0, NULL, REG_OPTION_NON_VOLATILE,
+				KEY_ALL_ACCESS, NULL, &hKey, &result) != ERROR_SUCCESS) {
+				MessageBox(hWnd, TEXT("Error inserting/accessing address to registry. Try again later"), TEXT("PipeMessagin - Error"), MB_OK);
+				exit(0);
+	} else if (result == REG_CREATED_NEW_KEY) {
+		RegSetValueEx(hKey, TEXT("PipeAddress"), 0, REG_SZ, (LPBYTE) pipeAddress, _tcslen(pipeAddress)*sizeof(TCHAR));
+		version = 1;
+		RegSetValueEx(hKey, TEXT("Version"), 0, REG_DWORD, (LPBYTE)&version, sizeof(DWORD));
+		RegCloseKey(hKey);
+	} else {
+		// Do nothing
+		RegCloseKey(hKey);
+	}
+	setPipeName();
+
+	return 0;
+}
+
+BOOL CALLBACK WndLogin::DialogSetPipeToRegistry(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	WndLogin * WindowPtr = (WndLogin *) GetWindowLongPtr(hWnd, 0);
+	switch(msg) {
+	case WM_INITDIALOG:
+		SetWindowText(hWnd, TEXT("PipeMessaging - Set Pipe Server Address"));
+		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case IDOK:
+			WindowPtr->onOK_DialogSetPipeToRegistry(hWnd);
+			EndDialog(hWnd, 0);
+			break;
+		}
+		break;
+	case WM_CLOSE:
+		break; // Don't allow close
+	default:
+		return 0;
+		break;
+	}
+	return 0;
+}
 
 LRESULT CALLBACK WndLogin::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	WndLogin * WindowPtr = (WndLogin *) GetWindowLongPtr(hWnd, 0);

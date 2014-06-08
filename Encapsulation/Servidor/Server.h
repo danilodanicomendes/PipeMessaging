@@ -13,6 +13,9 @@ class Server {
 	vector <DedicatedServer*> servers;
 	// Pipe name
 	TCHAR * PIPE_NAME;
+	// Responsible for reading inputed user and sending response
+	// return validation::SUCCESS || validation::FAILED
+	const BOOL validUser(HANDLE * hPipe);
 public:
 	// Constructor
 	Server();

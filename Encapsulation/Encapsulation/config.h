@@ -29,6 +29,14 @@
 #endif
 
 extern "C"{
+	// Has to be static so it won't try to redefine every time the header is added
+	//static HANDLE hPipePublic;
+	static TCHAR PIPE_NAME[TAMTEXTO] = TEXT("\\\\.\\pipe\\PipeMessaging");
+
+	enum validation {
+		SUCCESS = 1,
+		FAILED = 0
+	};
 
 	typedef struct{
 		TCHAR login[TAMLOGIN], password[TAMPASS];
@@ -60,10 +68,10 @@ extern "C"{
 
 
 
-	DLL_IMP_API int Autenticar(TCHAR *login, TCHAR *pass);
-	/* Valida o acesso a um dado login e password de um dado utilizador.
-	Esta função retorna a validação (sucesso ou insucesso) e ainda se o
-	utilizador em causa é administrador.*/
+	// Authenticate user through pipe
+	DLL_IMP_API int Autenticar(HANDLE &hPipePublic, TCHAR *login, TCHAR *pass);
+	// set pipe address from registry key
+	DLL_IMP_API void setPipeName();
 	DLL_IMP_API int LerListaUtilizadores(UTILIZADOR *utilizadores);
 	/* Recebe (por argumento) informação actualizada de forma autónoma
 	sobre os jogadores online.*/

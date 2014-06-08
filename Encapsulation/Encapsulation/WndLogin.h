@@ -2,7 +2,6 @@
 #include <Window.h>
 #include "Window.h"
 
-
 /* Janela de Login
    
    Nota: Para apanhar WM_CHAR quando se tem focus na edit é preciso fazer uma subclass da janela edit
@@ -40,6 +39,10 @@ class WndLogin : public Window<WndLogin> {
 
 	// Altera fundo dos controlos edits. Retorna brush utilizada
 	LRESULT setEditsBk(WPARAM wParam, LPARAM lParam);
+
+	// If registry doesnt have IP from server DialogBox
+	static BOOL CALLBACK DialogSetPipeToRegistry(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	int onOK_DialogSetPipeToRegistry(HWND hWnd);
 public:
 	// Construtor possuí características da janela. Desta forma não me engano.
 	WndLogin(HINSTANCE hInst);

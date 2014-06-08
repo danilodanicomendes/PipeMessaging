@@ -1,0 +1,44 @@
+﻿Build started 08-06-2014 02:34:32.
+Project "C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\dll\dll.vcxproj" on node 2 (Build target(s)).
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D DLL_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt config.cpp
+  config.cpp
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(3): warning C4273: 'Autenticar' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(71) : see previous definition of 'Autenticar'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(24): warning C4273: 'setPipeName' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(73) : see previous definition of 'setPipeName'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(26): warning C4101: 'hKey' : unreferenced local variable
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(27): warning C4101: 'version' : unreferenced local variable
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(35): warning C4273: 'LerListaUtilizadores' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(74) : see previous definition of 'LerListaUtilizadores'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(36): warning C4273: 'LerListaUtilizadoresRegistados' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(77) : see previous definition of 'LerListaUtilizadoresRegistados'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(37): warning C4273: 'IniciarConversa' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(79) : see previous definition of 'IniciarConversa'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(38): warning C4273: 'DesligarConversa' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(83) : see previous definition of 'DesligarConversa'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(39): warning C4273: 'EnviarMensagemPrivada' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(89) : see previous definition of 'EnviarMensagemPrivada'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(40): warning C4273: 'EnviarMensagemPública' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(93) : see previous definition of 'EnviarMensagemPública'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(41): warning C4273: 'LerInformacaoInicial' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(95) : see previous definition of 'LerInformacaoInicial'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(42): warning C4273: 'LerMensagensPublicas' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(98) : see previous definition of 'LerMensagensPublicas'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(43): warning C4273: 'LerMensagensPrivadas' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(101) : see previous definition of 'LerMensagensPrivadas'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(44): warning C4273: 'Sair' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(104) : see previous definition of 'Sair'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(45): warning C4273: 'Desligar' : inconsistent dll linkage
+          c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.h(106) : see previous definition of 'Desligar'
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(42): warning C4700: uninitialized local variable 'a' used
+c:\users\danilo\documents\github\pipemessaging\encapsulation\dll\config.cpp(43): warning C4700: uninitialized local variable 'a' used
+Link:
+  C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.lib" /MACHINE:X86 /DLL Debug\config.obj
+     Creating library C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.lib and object C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.exp
+  dll.vcxproj -> C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\Debug\config.dll
+Done Building Project "C:\Users\Danilo\Documents\GitHub\pipemessaging\Encapsulation\dll\dll.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:15.75
