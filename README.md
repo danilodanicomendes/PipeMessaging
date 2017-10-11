@@ -1,6 +1,6 @@
 PIPEMESSAGING
 =============
-by Danilo Mendes
+by ISEC student Danilo Mendes
 
 Introduction
 =============
